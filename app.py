@@ -6,8 +6,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import sys
 import time
-from twisted.internet.task import LoopingCall
-from twisted.internet import reactor
+#from twisted.internet.task import LoopingCall
+#from twisted.internet import reactor
 import threading
 
 
@@ -16,21 +16,22 @@ class App(tk.Frame):
         tk.Frame.__init__(self, master)
         self.pack()
         self.master.title
+        
 
         self.class_id = tk.StringVar()
         self.email = tk.StringVar()
         self.password = tk.StringVar()
 
-        tk.Label(self, text="Enter your class URL here").grid(column=0, row=0)
-        tk.Entry(self, textvariable=self.class_id).grid(column = 1, row=0)
-        tk.Label(self, text="Enter your email address here").grid(column=0, row=1)
-        tk.Entry(self, textvariable=self.email).grid(column = 1, row=1)
-        tk.Label(self, text="Enter your password here").grid(column=0, row=2)
-        tk.Entry(self, textvariable=self.password, show="*").grid(column = 1, row=2)
+        tk.Label(self, text="Enter your class URL here", background='#002145', fg="white", font='Helvetica 12 bold').grid(column=0, row=0)
+        tk.Entry(self, textvariable=self.class_id, highlightbackground='#002145').grid(column = 1, row=0)
+        tk.Label(self, text="Enter your email address here", background='#002145', fg="white", font='Helvetica 12 bold').grid(column=0, row=1)
+        tk.Entry(self, textvariable=self.email, highlightbackground='#002145').grid(column = 1, row=1)
+        tk.Label(self, text="Enter your password here", background='#002145', fg="white", font='Helvetica 12 bold').grid(column=0, row=2)
+        tk.Entry(self, textvariable=self.password, show="*", highlightbackground='#002145').grid(column = 1, row=2)
         #tk.Label(self, text="Please keep this window open for regular checks.\nClose window when you have registered in desired class.").grid(column=0, row=4)
 
-        tk.Button(self, text="Initialize Details", command=self.enter_var).grid(column=0, row=3)
-        tk.Button(self, text="Begin Monitoring Class", command=self.interval).grid(column=1, row=3)
+        tk.Button(self, text="Initialize Details", command=self.enter_var, background='#002145', highlightbackground='#002145').grid(column=0, row=3)
+        tk.Button(self, text="Begin Monitoring Class", command=self.interval, background='#002145', highlightbackground='#002145').grid(column=1, row=3)
         
 
     def enter_var(self):
@@ -55,10 +56,8 @@ class App(tk.Frame):
             for i in range(len(rel_str)):
                 if rel_str[i] == ':' and rel_str[i + 1] == "0":
                     seats_remaining = 0
-                    seats_remaining
                 elif rel_str[i] == ':' and int(rel_str[i + 1]) > 0:
                     seats_remaining = 1
-                    seats_remaining
             fromaddr = self.email_entry
             toaddr = self.email_entry
             msg = MIMEMultipart()
@@ -80,20 +79,14 @@ class App(tk.Frame):
 
     def interval(self):
         t = threading.Thread(target=self.send_email)
-        t.daemon = True #ends thread when there are no other non-thread scripts active
+        t.daemon = True #ends thread when there are no other non-thread scripts active. Allows for red close button to terminate program.
         t.start()
         
             
-            
-        
-        '''
-        ls = LoopingCall(self.send_email)
-        ls.start(10)
-        reactor.run()
-        '''
 
 root = tk.Tk()
-app = App("Class Vacancy System", master=root)
+app = App(title = "Class Vacancy System", master=root)
+app.configure(background='#002145')
 app.master.title("Class Vacancy System")
 app.mainloop()
-root.destroy()
+root.quit()
